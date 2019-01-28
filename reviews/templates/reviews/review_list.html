@@ -1,0 +1,17 @@
+<head>
+    <title>Bewertungsliste</title>
+</head>
+
+<body>
+    <div>
+        <h1><a href="/">Übersicht über alle Bewertungen</a></h1>
+    </div>
+
+{% for review in reviews %}
+    <div>
+        <p>Datum: {{ post.date }}</p>
+        <h2><a href="">{{ review.product_number }}</a></h2>
+        <p>{{ review.text|linebreaksbr }}</p>
+    </div>
+{% endfor %}
+</body>
