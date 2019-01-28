@@ -1,17 +1,16 @@
-<head>
-    <title>Bewertungsliste</title>
-</head>
+{% extends "reviews/index.html" %}
+{% load static %}
 
-<body>
-    <div>
-        <h1><a href="/">Übersicht über alle Bewertungen</a></h1>
-    </div>
+{% block title %}Bewertungsübersicht{% endblock %}
+{% block main_heading %}Bewertungsübersicht{% endblock %}
 
+{% block content %}
 {% for review in reviews %}
     <div>
-        <p>Datum: {{ post.date }}</p>
-        <h2><a href="">{{ review.product_number }}</a></h2>
+        <h2><a href="">{{ review.product_number.name }}</a></h2>
+        <p>Von {{ review.author }}</p>
+        <p>Datum: {{ review.date }}</p>
         <p>{{ review.text|linebreaksbr }}</p>
     </div>
 {% endfor %}
-</body>
+{% endblock %}
