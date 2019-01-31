@@ -1,6 +1,7 @@
-from django.shortcuts import render
-from .models import Review
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Review, Product
 from django.utils import timezone
+from .forms import ReviewForm
 
 # Create your views here.
 def review_list(request):
@@ -10,5 +11,27 @@ def review_list(request):
 def index(request):
     return render(request, 'reviews/index.html', {})
 
-def reviews_detail(request, product):
-    reviews = Review.objects.filter(date__lte=timezone.now()).filter_by(product_number=product).order_by('date')
+def product_list(request):
+    products = Product.objects.filter().order_by('number')
+    return render(request, 'reviews/product_list.html', {'products': products})
+
+def product_detail(request, pk):
+    #reviews = get_object_or_404(Review, pk=pk)
+    reviews = Review.objects.filter(date__lte=timezone.now()).filter(product_number=pk).order_by('date')
+    return render(request, 'reviews/product_detail.html', {'reviews': reviews})
+
+def review_new(request, product):
+    if request.method == "POST":
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            #review.author = request.user
+            review.date = timezone.now()
+            #review.product_number = product
+            review.save()
+            return redirect('product_detail', pk=product)
+    else:
+        form = ReviewForm()
+    return render(request, 'reviews/review_edit.html', {'form': form})
+    #return redirect('reviews/review_edit.html', {'form': form, 'pk': product})
+    

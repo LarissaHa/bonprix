@@ -7,7 +7,7 @@
 {% block content %}
 {% for review in reviews %}
     <div>
-        <h2><a href="">{{ review.product_number.name }}</a></h2>
+        <h2><a href="{% url 'product_detail' pk=review.product_number.number %}">{{ review.product_number.name }}</a></h2>
         <p>Von {{ review.author }}</p>
         <p>Datum: {{ review.date }}</p>
         <p>{{ review.text|linebreaksbr }}</p>

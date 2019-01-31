@@ -1,0 +1,13 @@
+{% extends "reviews/index.html" %}
+{% load static %}
+
+{% block title %}Produkte{% endblock %}
+{% block main_heading %}Produkte{% endblock %}
+
+{% block content %}
+{% for product in products %}
+    <div>
+        <h2><a href="{% url 'product_detail' pk=product.number %}">{{ product.name }}</a></h2>
+    </div>
+{% endfor %}
+{% endblock %}

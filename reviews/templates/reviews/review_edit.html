@@ -1,0 +1,9 @@
+{% extends "reviews/index.html" %}
+
+{% block content %}
+    <h2>New review</h2>
+    <form method="POST">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary p-3 px-xl-4 py-xl-3">Save</button>
+    </form>
+{% endblock %}
