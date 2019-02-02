@@ -5,13 +5,13 @@
 {% block main_heading %}Bewertungsübersicht {{ products.0.name }} ({{ products.0.number }}){% endblock %}
 
 {% block content %}
-<table>
+<table cellpadding="10">
     <colgroup>
         <col width="25%">
         <col width="75%">
     </colgroup>
     <tr>
-        <td>
+        <td valign="top">
             <img src="{% get_static_prefix %}images/{{ products.0.number }}.jpg" alt="" title="" width="100%" /><br /><br />
             <a href="{% url 'review_new' product=products.0.number %}"><button type="submit" class="btn btn-primary p-3 px-xl-4 py-xl-3">bewerte das Produkt</button></a></td>
         </td>

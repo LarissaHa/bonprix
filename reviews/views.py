@@ -9,7 +9,7 @@ def review_list(request):
     return render(request, 'reviews/review_list.html', {'reviews': reviews})
 
 def index(request):
-    return render(request, 'reviews/index.html', {})
+    return render(request, 'reviews/home.html', {})
 
 def product_list(request):
     products = Product.objects.filter().order_by('number')

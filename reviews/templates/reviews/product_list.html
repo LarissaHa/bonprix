@@ -5,9 +5,30 @@
 {% block main_heading %}Produkte{% endblock %}
 
 {% block content %}
+
+<section class="ftco-section">
+    <div class="container">
+        <div class="row">
+            {% for product in products %}
+            
+                    <div class="col-md-4">
+                        <div class="blog-entry ftco-animate">
+                            <a href="{% url 'product_detail' pk=product.number %}" class="img img-2" style="background-image: url({% get_static_prefix %}images/{{ product.number }}.jpg);"></a>
+                            <div class="text text-2 pt-2 mt-3">
+                                <h3 class="mb-4"><a href="{% url 'product_detail' pk=product.number %}">{{ product.name }}</a></h3>
+                            </div>
+                        </div>
+                    </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<!--
 {% for product in products %}
     <div>
-        <h2><a href="{% url 'product_detail' pk=product.number %}">{{ product.name }}</a></h2>
+            <img src="{% get_static_prefix %}images/{{ product.number }}.jpg" />
+        <h4><a href="{% url 'product_detail' pk=product.number %}">{{ product.name }}</a></h4>
     </div>
 {% endfor %}
+-->
 {% endblock %}
