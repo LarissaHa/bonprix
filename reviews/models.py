@@ -19,6 +19,7 @@ class Review(models.Model):
 class Product(models.Model):
     number = models.IntegerField("Produkt Nummer", primary_key=True)
     name = models.TextField("Name des Produktes")
+    picture = models.ImageField(upload_to = 'reviews/static/images/', default='')
 
 def publish(self):
     self.save()

@@ -18,20 +18,22 @@ def product_list(request):
 def product_detail(request, pk):
     #reviews = get_object_or_404(Review, pk=pk)
     reviews = Review.objects.filter(date__lte=timezone.now()).filter(product_number=pk).order_by('date')
-    return render(request, 'reviews/product_detail.html', {'reviews': reviews})
+    products = Product.objects.filter(pk=pk).order_by('number')
+    return render(request, 'reviews/product_detail.html', {'reviews': reviews, 'products': products})
 
 def review_new(request, product):
+    products = Product.objects.filter(pk=product).order_by('number')
     if request.method == "POST":
         form = ReviewForm(request.POST)
         if form.is_valid():
             review = form.save(commit=False)
             #review.author = request.user
             review.date = timezone.now()
-            #review.product_number = product
+            review.product_number = Product.objects.filter(pk=product)[0]
             review.save()
             return redirect('product_detail', pk=product)
     else:
         form = ReviewForm()
-    return render(request, 'reviews/review_edit.html', {'form': form})
+    return render(request, 'reviews/review_edit.html', {'form': form, 'products': products})
     #return redirect('reviews/review_edit.html', {'form': form, 'pk': product})
     

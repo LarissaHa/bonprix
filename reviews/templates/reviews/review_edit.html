@@ -1,7 +1,10 @@
 {% extends "reviews/index.html" %}
 
+{% block title %}Neue Bewertung erstellen{% endblock %}
+{% block main_heading %}Neue Bewertung erstellen{% endblock %}
+
 {% block content %}
-    <h2>New review</h2>
+    <p>für den Artikel {{ products.0.name }} ({{ products.0.number }})</p>
     <form method="POST">{% csrf_token %}
         {{ form.as_p }}
         <button type="submit" class="btn btn-primary p-3 px-xl-4 py-xl-3">Save</button>

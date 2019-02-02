@@ -1,22 +1,36 @@
 {% extends "reviews/index.html" %}
 {% load static %}
 
-{% block title %}Bewertungsübersicht {{ review.product_number.number }}{% endblock %}
-{% block main_heading %}Bewertungsübersicht Produkt {{ review.product_number.number }}{% endblock %}
+{% block title %}Bewertungsübersicht {{ products.0.name }}{% endblock %}
+{% block main_heading %}Bewertungsübersicht {{ products.0.name }} ({{ products.0.number }}){% endblock %}
 
 {% block content %}
-{% if reviews %}
-{% for review in reviews %}
-    <div>
-        <h2><a href="">{{ review.product_number.name }} ({{ review.product_number.number }})</a></h2>
-        <p>Von {{ review.author }}</p>
-        <p>Datum: {{ review.date }}</p>
-        <p>{{ review.text|linebreaksbr }}</p>
-    </div>
-    <a href="{% url 'review_new' product=review.product_number.number %}"><button type="submit" class="btn btn-primary p-3 px-xl-4 py-xl-3">bewerte das Produkt</button></a>
-{% endfor %}
-{% else %}
-keine Bewertungen bisher
+<table>
+    <colgroup>
+        <col width="25%">
+        <col width="75%">
+    </colgroup>
+    <tr>
+        <td>
+            <img src="{% get_static_prefix %}images/{{ products.0.number }}.jpg" alt="" title="" width="100%" /><br /><br />
+            <a href="{% url 'review_new' product=products.0.number %}"><button type="submit" class="btn btn-primary p-3 px-xl-4 py-xl-3">bewerte das Produkt</button></a></td>
+        </td>
+        <td><h3>Bisherige Bewertungen</h3>
+            {% if reviews %}
+                {% for review in reviews %}
+                    <div>
+                        <p>Von {{ review.author }}</p>
+                        <p>Datum: {{ review.date }}</p>
+                        <p>Sterne: {{ review.get_stars_display }}</p>
+                        <p>{{ review.text|linebreaksbr }}</p>
+                    </div>
+                    <hr>
+                {% endfor %}
+            {% else %}
+                keine Bewertungen bisher
+            {% endif %}
+        </td>
+    </tr>
+</table>
 
-{% endif %}
 {% endblock %}
