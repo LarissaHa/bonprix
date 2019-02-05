@@ -7,21 +7,102 @@
 {% block content %}
 <table cellpadding="10">
     <colgroup>
-        <col width="25%">
-        <col width="75%">
+        <col width="15%">
+        <col width="85%">
     </colgroup>
     <tr>
         <td valign="top">
             <img src="{% get_static_prefix %}images/{{ products.0.number }}.jpg" alt="" title="" width="100%" /><br /><br />
             <a href="{% url 'review_new' product=products.0.number %}"><button type="submit" class="btn btn-primary p-3 px-xl-4 py-xl-3">bewerte das Produkt</button></a></td>
         </td>
-        <td><h3>Bisherige Bewertungen</h3>
+        <td><h3>Durchschnittliche Bewertung</h3>
+                <p>{{ average }}
+                    {% if average >= 4.5 %}
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    {% elif average >= 3.5 %}
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+                    {% elif average >= 2.5 %}
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                    {% elif average >= 1.5 %}
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                    {% elif average >= 0.5 %}
+                        <i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                    {% else %}
+                        <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                    {% endif %}
+                </p>
+                    <table style="padding:0">
+                        <tr>
+                            <td><a href="#"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></a></td>
+                            <td style="width:75%"><a href="#"><div style="background-color:#f1f1f1; font-size:10px">
+                                    <div style="color:#ffffff; background-color:#d21929; text-align:center; width:{% widthratio rating.5 100 100 %}%;">{{ rating.5 }}%</div>
+                                </div></a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="#"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></a></td>
+                            <td style="width:75%"><a href="#"><div style="background-color:#f1f1f1; font-size:10px">
+                                    <div style="color:#ffffff; background-color:#d21929; text-align:center; width:{% widthratio rating.4 100 100 %}%;">{{ rating.4 }}%</div>
+                                </div></a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="#"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i></a></td>
+                            <td style="width:75%"><a href="#"><div style="background-color:#f1f1f1; font-size:10px">
+                                    <div style="color:#ffffff; background-color:#d21929; text-align:center; width:{% widthratio rating.3 100 100 %}%;">{{ rating.3 }}%</div>
+                                </div></a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="#"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i></a></td>
+                            <td style="width:75%"><a href="#"><div style="background-color:#f1f1f1; font-size:10px">
+                                    <div style="color:#ffffff; background-color:#d21929; text-align:center; width:{% widthratio rating.2 100 100 %}%;">{{ rating.2 }}%</div>
+                                </div></a></td>
+                        </tr>
+                        <tr>
+                            <td><a href="#"><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i></a></td>
+                            <td style="width:75%"><a href="#"><div style="background-color:#f1f1f1; font-size:10px">
+                                    <div style="color:#ffffff; background-color:#d21929; text-align:center; width:{% widthratio rating.1 100 100 %}%;">{{ rating.1 }}%</div>
+                                </div></a></td>
+                        </tr>
+                    </table>
+            <h3>Häufig erwähnte Themen</h3>
+                <table style="width:50%">
+                    <colgroup>
+                        <col width="33%">
+                        <col width="33%">
+                        <col width="33%">
+                    </colgroup>
+                    <tr>
+                        <td><a href="#"><div style="font-size:10px; color:#ffffff; background-color:#d21929; text-align:center; width:100%">{{ rating.1 }}%</div></a></td>
+                        <td><a href="#"><div style="font-size:10px; color:#ffffff; background-color:#d21929; text-align:center; width:100%">{{ rating.1 }}%</div></a></td>
+                        <td><a href="#"><div style="font-size:10px; color:#ffffff; background-color:#d21929; text-align:center; width:100%">{{ rating.1 }}%</div></a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#"><div style="font-size:10px; color:#ffffff; background-color:#d21929; text-align:center; width:100%">{{ rating.1 }}%</div></a></td>
+                        <td><a href="#"><div style="font-size:10px; color:#ffffff; background-color:#d21929; text-align:center; width:100%">{{ rating.1 }}%</div></a></td>
+                        <td><a href="#"><div style="font-size:10px; color:#ffffff; background-color:#d21929; text-align:center; width:100%">{{ rating.1 }}%</div></a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="#"><div style="font-size:10px; color:#ffffff; background-color:#d21929; text-align:center; width:100%">{{ rating.1 }}%</div></a></td>
+                        <td><a href="#"><div style="font-size:10px; color:#ffffff; background-color:#d21929; text-align:center; width:100%">{{ rating.1 }}%</div></a></td>
+                        <td><a href="#"><div style="font-size:10px; color:#ffffff; background-color:#d21929; text-align:center; width:100%">{{ rating.1 }}%</div></a></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><a href="#"><div style="font-size:10px; color:#ffffff; background-color:#d21929; text-align:center; width:100%">{{ rating.1 }}%</div></a></td>
+                        <td></td>
+                    </tr>
+                </table>
+            <h3>Neueste Bewertungen</h3>
             {% if reviews %}
-                {% for review in reviews %}
+                {% for review in reviews|slice:":5" %}
                     <div>
                         <p>Von {{ review.author }}</p>
                         <p>Datum: {{ review.date }}</p>
-                        <p>Sterne: {{ review.get_stars_display }}</p>
+                        <p>Sterne: {% ifequal review.stars "1" %}<i class="fas fa-star"></i>{% endifequal %}
+                            {% ifequal review.stars "2" %}<i class="fas fa-star"></i><i class="fas fa-star"></i>{% endifequal %}
+                            {% ifequal review.stars "3" %}<i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>{% endifequal %}
+                            {% ifequal review.stars "4" %}<i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>{% endifequal %}
+                            {% ifequal review.stars "5" %}<i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>{% endifequal %}
+                        </p>
                         <p>{{ review.text|linebreaksbr }}</p>
                     </div>
                     <hr>

@@ -5,8 +5,8 @@ from .forms import ReviewForm
 
 # Create your views here.
 def review_list(request):
-    reviews = Review.objects.filter(date__lte=timezone.now()).order_by('date')
-    return render(request, 'reviews/review_list.html', {'reviews': reviews})
+    reviews = Review.objects.filter(date__lte=timezone.now()).order_by('-date')
+    return render(request, 'reviews/review_list.html', {'reviews': reviews[:5]})
 
 def index(request):
     return render(request, 'reviews/home.html', {})
@@ -17,9 +17,21 @@ def product_list(request):
 
 def product_detail(request, pk):
     #reviews = get_object_or_404(Review, pk=pk)
-    reviews = Review.objects.filter(date__lte=timezone.now()).filter(product_number=pk).order_by('date')
+    reviews = Review.objects.filter(date__lte=timezone.now()).filter(product_number=pk).order_by('-date')
+    average = 0
+    rating = {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0}
+    if len(reviews) > 0:
+        for review in reviews:
+            average = average + int(review.stars)
+        average = average / len(reviews)
+        for review in reviews:
+            for i in range(1,6):
+                if int(review.stars) == i:
+                    rating[str(i)] = rating[str(i)] + 1
+        for stars in rating:
+            rating[stars] = ( rating[stars] / len(reviews) ) * 100
     products = Product.objects.filter(pk=pk).order_by('number')
-    return render(request, 'reviews/product_detail.html', {'reviews': reviews, 'products': products})
+    return render(request, 'reviews/product_detail.html', {'reviews': reviews, 'products': products, 'average': average, 'rating': rating})
 
 def review_new(request, product):
     products = Product.objects.filter(pk=product).order_by('number')
@@ -27,7 +39,7 @@ def review_new(request, product):
         form = ReviewForm(request.POST)
         if form.is_valid():
             review = form.save(commit=False)
-            #review.author = request.user
+            review.author = "Unknown"
             review.date = timezone.now()
             review.product_number = Product.objects.filter(pk=product)[0]
             review.save()

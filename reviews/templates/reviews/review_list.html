@@ -1,16 +1,33 @@
 {% extends "reviews/index.html" %}
 {% load static %}
 
-{% block title %}Bewertungsübersicht{% endblock %}
-{% block main_heading %}Bewertungsübersicht{% endblock %}
+{% block title %}Die neuesten Bewertungen{% endblock %}
+{% block main_heading %}Die neuesten Bewertungen{% endblock %}
 
 {% block content %}
-{% for review in reviews %}
-    <div>
-        <h2><a href="{% url 'product_detail' pk=review.product_number.number %}">{{ review.product_number.name }}</a></h2>
-        <p>Von {{ review.author }}</p>
-        <p>Datum: {{ review.date }}</p>
-        <p>{{ review.text|linebreaksbr }}</p>
-    </div>
-{% endfor %}
+<table cellpadding="10">
+    <colgroup>
+        <col width="15%">
+        <col width="85%">
+    </colgroup>
+    {% for review in reviews %}
+    <tr>
+        <td valign="top">
+            <a href="{% url 'product_detail' pk=review.product_number.number %}"><img src="{% get_static_prefix %}images/{{ review.product_number.number }}.jpg" alt="" title="" width="100%" /></a>
+        </td>
+        <td>
+            <h3><a href="{% url 'product_detail' pk=review.product_number.number %}">{{ review.product_number.name }}</a></h3>
+            <p>Von {{ review.author }}</p>
+            <p>Datum: {{ review.date }}</p>
+            <p>Sterne: {% ifequal review.stars "1" %}<i class="fas fa-star"></i>{% endifequal %}
+                {% ifequal review.stars "2" %}<i class="fas fa-star"></i><i class="fas fa-star"></i>{% endifequal %}
+                {% ifequal review.stars "3" %}<i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>{% endifequal %}
+                {% ifequal review.stars "4" %}<i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>{% endifequal %}
+                {% ifequal review.stars "5" %}<i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>{% endifequal %}
+            </p>
+            <p>{{ review.text|linebreaksbr }}</p>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
 {% endblock %}
