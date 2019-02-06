@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Review, Product
 from django.utils import timezone
-from .forms import ReviewForm
+from .forms import ReviewForm, ReviewFormUnknown
 
 # Create your views here.
 def review_list(request):
@@ -48,4 +48,19 @@ def review_new(request, product):
         form = ReviewForm()
     return render(request, 'reviews/review_edit.html', {'form': form, 'products': products})
     #return redirect('reviews/review_edit.html', {'form': form, 'pk': product})
+
+def review_new_unknown(request):
+    #products = Product.objects.filter(pk=product).order_by('number')
+    if request.method == "POST":
+        form = ReviewFormUnknown(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.author = "Unknown"
+            review.date = timezone.now()
+            #review.product_number = Product.objects.filter(pk=product)[0]
+            review.save()
+            return redirect('product_detail', pk=review.product_number.number)
+    else:
+        form = ReviewFormUnknown()
+    return render(request, 'reviews/review_new_unknown.html', {'form': form})
     
