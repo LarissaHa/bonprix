@@ -14,12 +14,16 @@ class Review(models.Model):
             default=timezone.now)
     stars = models.CharField("Sterne",
         max_length=1, choices=STARS)
-    product_number = models.ForeignKey('product', on_delete=models.CASCADE)
+    product_number = models.ForeignKey('product', on_delete=models.PROTECT)
 
 class Product(models.Model):
     number = models.IntegerField("Produkt Nummer", primary_key=True)
     name = models.TextField("Name des Produktes")
     picture = models.ImageField(upload_to = 'reviews/static/images/', default='')
+
+class Topic(models.Model):
+    review = models.ForeignKey('review', on_delete=models.PROTECT)
+    topic = models.TextField("Kategorie des Inhalts", max_length=30)
 
 def publish(self):
     self.save()
