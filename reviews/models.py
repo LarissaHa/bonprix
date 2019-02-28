@@ -21,12 +21,15 @@ class Product(models.Model):
     name = models.TextField("Name des Produktes")
     picture = models.ImageField(upload_to = 'reviews/static/images/', default='')
 
+    def __str__(self):
+        return self.name
+
 class Topic(models.Model):
     review = models.ForeignKey('review', on_delete=models.PROTECT)
     topic = models.TextField("Kategorie des Inhalts", max_length=30)
 
-def publish(self):
-    self.save()
+    def publish(self):
+        self.save()
 
-def __str__(self):
-    return self.title
+    def __str__(self):
+        return self.title
