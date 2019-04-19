@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Review, Product
+from .models import Review, Product, Topic
 from django.utils import timezone
 from .forms import ReviewForm, ReviewFormUnknown
+import pandas as pd
 
 # Create your views here.
 def review_list(request):
@@ -18,8 +19,19 @@ def product_list(request):
 def product_detail(request, pk):
     #reviews = get_object_or_404(Review, pk=pk)
     reviews = Review.objects.filter(date__lte=timezone.now()).filter(product_number=pk).order_by('-date')
-    topics = Topic.objects.filter(product=pk)
-    display_topics = Topic.objects.filter(product=pk).distinct('topic')
+    topics = list()
+    topics_complicated = Topic.objects.filter(product=pk)
+    for g in range(len(topics_complicated)):
+        topics.append(topics_complicated[g].topic)
+    #display_topics = Topic.objects.filter(product=pk).distinct('topic')
+    comparison = pd.DataFrame(columns=['freq'], index=set(topics))
+    comparison = comparison.fillna(0)
+    for g in topics:
+        comparison["freq"][g] += 1
+    comparison = comparison.sort_values("freq", ascending=False).head(10)
+    topics_list = comparison.index.tolist()
+    topics_number = comparison.freq.tolist()
+
     average = 0
     rating = {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0}
     if len(reviews) > 0:
@@ -35,7 +47,7 @@ def product_detail(request, pk):
             rating[stars] = ( rating[stars] / len(reviews) ) * 100
             rating[stars] = round(rating[stars], 1)
     products = Product.objects.filter(pk=pk).order_by('number')
-    return render(request, 'reviews/product_detail.html', {'reviews': reviews, 'products': products, 'average': average, 'rating': rating})
+    return render(request, 'reviews/product_detail.html', {'reviews': reviews, 'products': products, 'average': average, 'rating': rating, 'topics_list': topics_list, 'topics_number': topics_number})
 
 def review_new(request, product):
     products = Product.objects.filter(pk=product).order_by('number')

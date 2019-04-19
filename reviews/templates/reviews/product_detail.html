@@ -71,27 +71,23 @@
                         <col width="33%">
                     </colgroup>
                     <tr>
-                        <td><a href="#"><div style="font-size:10px; color:#ffffff; background-color:#d21929; text-align:center; width:100%">{{ rating.1 }}%</div></a></td>
-                        <td><a href="#"><div style="font-size:10px; color:#ffffff; background-color:#d21929; text-align:center; width:100%">{{ rating.1 }}%</div></a></td>
-                        <td><a href="#"><div style="font-size:10px; color:#ffffff; background-color:#d21929; text-align:center; width:100%">{{ rating.1 }}%</div></a></td>
+                        <td><a href="#"><div style="font-size:10px; color:#ffffff; background-color:#d21929; text-align:center; width:100%">{{ topics_list.0 }} ({{ topics_number.0}})</div></a></td>
+                        <td><a href="#"><div style="font-size:10px; color:#ffffff; background-color:#d21929; text-align:center; width:100%">{{ topics_list.1 }} ({{ topics_number.1}})</div></a></td>
+                        <td><a href="#"><div style="font-size:10px; color:#ffffff; background-color:#d21929; text-align:center; width:100%">{{ topics_list.2 }} ({{ topics_number.2}})</div></a></td>
                     </tr>
                     <tr>
-                        <td><a href="#"><div style="font-size:10px; color:#ffffff; background-color:#d21929; text-align:center; width:100%">{{ rating.1 }}%</div></a></td>
-                        <td><a href="#"><div style="font-size:10px; color:#ffffff; background-color:#d21929; text-align:center; width:100%">{{ rating.1 }}%</div></a></td>
-                        <td><a href="#"><div style="font-size:10px; color:#ffffff; background-color:#d21929; text-align:center; width:100%">{{ rating.1 }}%</div></a></td>
+                        <td><a href="#"><div style="font-size:10px; color:#ffffff; background-color:#d21929; text-align:center; width:100%">{{ topics_list.3 }} ({{ topics_number.3}})</div></a></td>
+                        <td><a href="#"><div style="font-size:10px; color:#ffffff; background-color:#d21929; text-align:center; width:100%">{{ topics_list.4 }} ({{ topics_number.4}})</div></a></td>
+                        <td><a href="#"><div style="font-size:10px; color:#ffffff; background-color:#d21929; text-align:center; width:100%">{{ topics_list.5 }} ({{ topics_number.5}})</div></a></td>
                     </tr>
                     <tr>
-                        <td><a href="#"><div style="font-size:10px; color:#ffffff; background-color:#d21929; text-align:center; width:100%">{{ rating.1 }}%</div></a></td>
-                        <td><a href="#"><div style="font-size:10px; color:#ffffff; background-color:#d21929; text-align:center; width:100%">{{ rating.1 }}%</div></a></td>
-                        <td><a href="#"><div style="font-size:10px; color:#ffffff; background-color:#d21929; text-align:center; width:100%">{{ rating.1 }}%</div></a></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td><a href="#"><div style="font-size:10px; color:#ffffff; background-color:#d21929; text-align:center; width:100%">{{ rating.1 }}%</div></a></td>
-                        <td></td>
+                        <td><a href="#"><div style="font-size:10px; color:#ffffff; background-color:#d21929; text-align:center; width:100%">{{ topics_list.6 }} ({{ topics_number.6}})</div></a></td>
+                        <td><a href="#"><div style="font-size:10px; color:#ffffff; background-color:#d21929; text-align:center; width:100%">{{ topics_list.7 }} ({{ topics_number.7}})</div></a></td>
+                        <td><a href="#"><div style="font-size:10px; color:#ffffff; background-color:#d21929; text-align:center; width:100%">{{ topics_list.8 }} ({{ topics_number.8}})</div></a></td>
                     </tr>
                 </table>
             <h3>Neueste Bewertungen</h3>
+            {{ comparison }}
             {% if reviews %}
                 {% for review in reviews|slice:":5" %}
                     <div>
