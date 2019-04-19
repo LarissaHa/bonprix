@@ -18,18 +18,22 @@ def product_list(request):
 def product_detail(request, pk):
     #reviews = get_object_or_404(Review, pk=pk)
     reviews = Review.objects.filter(date__lte=timezone.now()).filter(product_number=pk).order_by('-date')
+    topics = Topic.objects.filter(product=pk)
+    display_topics = Topic.objects.filter(product=pk).distinct('topic')
     average = 0
     rating = {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0}
     if len(reviews) > 0:
         for review in reviews:
             average = average + int(review.stars)
         average = average / len(reviews)
+        average = round(average, 1)
         for review in reviews:
             for i in range(1,6):
                 if int(review.stars) == i:
                     rating[str(i)] = rating[str(i)] + 1
         for stars in rating:
             rating[stars] = ( rating[stars] / len(reviews) ) * 100
+            rating[stars] = round(rating[stars], 1)
     products = Product.objects.filter(pk=pk).order_by('number')
     return render(request, 'reviews/product_detail.html', {'reviews': reviews, 'products': products, 'average': average, 'rating': rating})
 

@@ -20,12 +20,19 @@ class Product(models.Model):
     number = models.IntegerField("Produkt Nummer", primary_key=True)
     name = models.TextField("Name des Produktes")
     picture = models.ImageField(upload_to = 'reviews/static/images/', default='')
+    star1_count = models.IntegerField(default=0)
+    star2_count = models.IntegerField(default=0)
+    star3_count = models.IntegerField(default=0)
+    star4_count = models.IntegerField(default=0)
+    star5_count = models.IntegerField(default=0)
+    review_count = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name
 
 class Topic(models.Model):
     review = models.ForeignKey('review', on_delete=models.PROTECT)
+    product = models.ForeignKey('product', on_delete=models.PROTECT, default=0)
     topic = models.TextField("Kategorie des Inhalts", max_length=30)
 
     def publish(self):
