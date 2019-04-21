@@ -94,7 +94,7 @@ def product_detail_star(request, pk, star):
     # except EmptyPage:
     #     reviews = paginator.page(paginator.num_pages)
     reviews, page = paginator_spec(request, review_list)
-    return render(request, 'reviews/product_detail_star.html', {'reviews': reviews, 'products': products, 'average': average, 'rating': rating, 'topics_list': topics_list, 'topics_number': topics_number, 'page': page})
+    return render(request, 'reviews/product_detail_star.html', {'reviews': reviews, 'products': products, 'average': average, 'rating': rating, 'topics_list': topics_list, 'topics_number': topics_number, 'page': page, 'star': star})
 
 
 def product_detail_topic(request, pk, topic):
@@ -107,11 +107,14 @@ def product_detail_topic(request, pk, topic):
 def product_detail_sort(request, pk, sort):
     review_list, products, average, rating, topics_list, topics_number = product_detail(request, pk)
     if sort == "pos":
-        review_list = review_list.order_by('-star')
+        review_list = review_list.order_by('-stars')
+        tag = "Positive"
     elif sort == "neg":
-        review_list = review_list.order_by('star')
+        review_list = review_list.order_by('stars')
+        tag = "Negative"
     else:
         review_list = review_list.order_by('-date')
+        tag = "Neueste"
     # paginator = Paginator(review_list, 10)
     # page = request.GET.get('page')
     # try:
@@ -121,7 +124,7 @@ def product_detail_sort(request, pk, sort):
     # except EmptyPage:
     #     reviews = paginator.page(paginator.num_pages)
     reviews, page = paginator_spec(request, review_list)
-    return render(request, 'reviews/product_detail_sort.html', {'reviews': reviews, 'products': products, 'average': average, 'rating': rating, 'topics_list': topics_list, 'topics_number': topics_number, 'page': page})
+    return render(request, 'reviews/product_detail_sort.html', {'reviews': reviews, 'products': products, 'average': average, 'rating': rating, 'topics_list': topics_list, 'topics_number': topics_number, 'page': page, 'tag': tag})
 
 
 def review_new(request, product):

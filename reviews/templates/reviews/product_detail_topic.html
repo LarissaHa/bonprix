@@ -22,7 +22,7 @@
             <h3>Häufig erwähnte Themen</h3>
             {% include "reviews/display_topics.html" %}
             <br>
-            <button type="submit" class="btn btn-primary p-3 px-xl-4 py-xl-3">Filterung aufheben</button>
+            <a href="{% url 'product_detail_sort' pk=products.0.number sort='default'%}"><button type="submit" class="btn btn-primary p-3 px-xl-4 py-xl-3">Filterung aufheben</button></a>
             <br>
             <h3>Bewertungen über "{{ topic }}"</h3>
             {% include "reviews/display_reviews.html" %}

@@ -18,7 +18,8 @@
         <td><h3>Durchschnittliche Bewertung</h3>
             {% include "reviews/display_stars.html" %}
             <br>
-            <button type="submit" class="btn btn-primary p-3 px-xl-4 py-xl-3">Filterung aufheben</button>
+            <a href="{% url 'product_detail_sort' pk=products.0.number sort='default'%}"><button type="submit" class="btn btn-primary p-3 px-xl-4 py-xl-3">Filterung aufheben</button></a>
+            <br>
             <br>
             <h3>{{ star }}-Sterne-Bewertungen</h3>
             {% include "reviews/display_reviews.html" %}
