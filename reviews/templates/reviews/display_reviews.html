@@ -1,6 +1,6 @@
 {{ comparison }}
 {% if reviews %}
-    {% for review in reviews|slice:":5" %}
+    {% for review in reviews|slice:":10" %}
         <div>
             <p>Von <b>{% ifequal review.author "Unkown" %}bonprix Kunde/Kundin {% else %}{{ review.author }}{% endifequal %}</b></p>
             <p>Datum: {{ review.date }}</p>
