@@ -1,13 +1,13 @@
 <div class="pagination">
     <span class="step-links">
       {% if page.has_previous %}
-        <a href="?page={{ page.previous_page_number }}" class="btn py-2"><span class="ion-ios-arrow-back"></span> Previous</a>
+        <a href="?page={{ page.previous_page_number }}" class="btn py-2"><span class="ion-ios-arrow-back"></span> Vorherige Seite</a>
       {% endif %}
       <span class="current">
-        Page {{ page.number }} of {{ page.paginator.num_pages }}.
+        Seite {{ page.number }} von {{ page.paginator.num_pages }}.
       </span>
         {% if page.has_next %}
-          <a href="?page={{ page.next_page_number }}" class="btn py-2">Next <span class="ion-ios-arrow-forward"></span></a>
+          <a href="?page={{ page.next_page_number }}" class="btn py-2">Nächste Seite <span class="ion-ios-arrow-forward"></span></a>
         {% endif %}
     </span>
   </div>

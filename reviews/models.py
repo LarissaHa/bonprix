@@ -45,6 +45,7 @@ class Topic(models.Model):
     review = models.ForeignKey('review', on_delete=models.PROTECT)
     product = models.ForeignKey('product', on_delete=models.PROTECT, default=0)
     topic = models.TextField("Kategorie des Inhalts", max_length=30)
+    topic_safe = models.TextField("HTML-sichere Version des Topics", max_length=33, default='leer')
 
     def publish(self):
         self.save()

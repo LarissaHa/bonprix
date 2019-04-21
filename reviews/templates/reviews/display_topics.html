@@ -1,6 +1,6 @@
 {% if topics_list %}
-    {% for topic in topics_list|slice:":10" %}
-        <button type="submit" class="btn btn-primary p-3 px-xl-3 py-xl-1">{{ topic }}</button>
+    {% for topic in topics|slice:":10" %}
+        <a href="{% url 'product_detail_topic' pk=products.0.number topic_safe=topic.topic_safe %}"><button type="submit" class="btn btn-primary p-3 px-xl-3 py-xl-1">{{ topic.topic }} ({{ topic.freq_topic }})</button>
     {% endfor %}
 {% else %}
     keine bisher registrierten Themen 

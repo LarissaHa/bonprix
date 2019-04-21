@@ -13,10 +13,10 @@
     {% for review in reviews %}
     <tr>
         <td valign="top">
-            <a href="{% url 'product_detail' pk=review.product_number.number %}"><img src="{% get_static_prefix %}images/{{ review.product_number.number }}.jpg" alt="" title="" width="100%" /></a>
+            <a href="{% url 'product_detail_sort' pk=review.product_number.number sort='default' %}"><img src="{% get_static_prefix %}images/{{ review.product_number.number }}.jpg" alt="" title="" width="100%" /></a>
         </td>
         <td>
-            <h3><a href="{% url 'product_detail' pk=review.product_number.number %}">{{ review.product_number.name }}</a></h3>
+            <h3><a href="{% url 'product_detail_sort' pk=review.product_number.number sort='default' %}">{{ review.product_number.name }}</a></h3>
             <p>Von {{ review.author }}</p>
             <p>Datum: {{ review.date }}</p>
             <p>Sterne: {% ifequal review.stars "1" %}<i class="fas fa-star"></i>{% endifequal %}

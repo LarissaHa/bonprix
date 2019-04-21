@@ -55,12 +55,14 @@ def product_detail(request, pk):
 
     # TOPICS GENERATOR
     topics_complicated = Topic.objects.filter(product=pk)
-    topics = topics_complicated.values('topic').annotate(freq_topic=Count('topic')).order_by('-freq_topic')[:10]
+    topics = topics_complicated.values('topic', 'topic_safe').annotate(freq_topic=Count('topic')).order_by('-freq_topic')[:10]
     topics_list = list()
     topics_number = list()
+    topics_safe = list()
     for item in list(topics):
         topics_list.append(item["topic"])
         topics_number.append(item["freq_topic"])
+        topics_safe.append(item["topic_safe"])
 
     # STARS AND RATING GENERATOR
     average = 0
@@ -80,10 +82,11 @@ def product_detail(request, pk):
 
     # CALL PRODUCT
     products = Product.objects.filter(pk=pk).order_by('number')
-    return review_list, products, average, rating, topics_list, topics_number
+    return review_list, products, average, rating, topics_list, topics_number, topics_safe, topics
+
 
 def product_detail_star(request, pk, star):
-    review_list, products, average, rating, topics_list, topics_number = product_detail(request, pk)
+    review_list, products, average, rating, topics_list, topics_number, topics_safe, topics = product_detail(request, pk)
     review_list = review_list.filter(stars=star).order_by('-date')
     # paginator = Paginator(review_list, 10)
     # page = request.GET.get('page')
@@ -94,18 +97,11 @@ def product_detail_star(request, pk, star):
     # except EmptyPage:
     #     reviews = paginator.page(paginator.num_pages)
     reviews, page = paginator_spec(request, review_list)
-    return render(request, 'reviews/product_detail_star.html', {'reviews': reviews, 'products': products, 'average': average, 'rating': rating, 'topics_list': topics_list, 'topics_number': topics_number, 'page': page, 'star': star})
-
-
-def product_detail_topic(request, pk, topic):
-    review_list, products, average, rating, topics_list, topics_number = product_detail(request, pk)
-    # review_list = review_list.filter(stars=star)
-    reviews, page = paginator_spec(request, review_list)
-    return render(request, 'reviews/product_detail_topic.html', {'reviews': reviews, 'products': products, 'average': average, 'rating': rating, 'topics_list': topics_list, 'topics_number': topics_number, 'page': page})
+    return render(request, 'reviews/product_detail_star.html', {'reviews': reviews, 'products': products, 'average': average, 'rating': rating, 'topics_list': topics_list, 'topics_number': topics_number, 'topics_safe': topics_safe, 'topics': topics, 'page': page, 'star': star})
 
 
 def product_detail_sort(request, pk, sort):
-    review_list, products, average, rating, topics_list, topics_number = product_detail(request, pk)
+    review_list, products, average, rating, topics_list, topics_number, topics_safe, topics = product_detail(request, pk)
     if sort == "pos":
         review_list = review_list.order_by('-stars')
         tag = "Positive"
@@ -115,16 +111,17 @@ def product_detail_sort(request, pk, sort):
     else:
         review_list = review_list.order_by('-date')
         tag = "Neueste"
-    # paginator = Paginator(review_list, 10)
-    # page = request.GET.get('page')
-    # try:
-    #     reviews = paginator.page(page)
-    # except PageNotAnInteger:
-    #     reviews = paginator.page(1)
-    # except EmptyPage:
-    #     reviews = paginator.page(paginator.num_pages)
     reviews, page = paginator_spec(request, review_list)
-    return render(request, 'reviews/product_detail_sort.html', {'reviews': reviews, 'products': products, 'average': average, 'rating': rating, 'topics_list': topics_list, 'topics_number': topics_number, 'page': page, 'tag': tag})
+    return render(request, 'reviews/product_detail_sort.html', {'reviews': reviews, 'products': products, 'average': average, 'rating': rating, 'topics_list': topics_list, 'topics_number': topics_number, 'topics_safe': topics_safe, 'topics': topics, 'page': page, 'tag': tag})
+
+
+def product_detail_topic(request, pk, topic_safe):
+    review_list, products, average, rating, topics_list, topics_number, topics_safe, topics = product_detail(request, pk)
+    topic_with_product = Topic.objects.filter(product=pk, topic_safe=topic_safe).values('review').order_by('review')
+    id_list = [ids['review'] for ids in topic_with_product]
+    reviews_with_topic = Review.objects.filter(product_number=pk, pk__in=id_list)
+    reviews, page = paginator_spec(request, reviews_with_topic)
+    return render(request, 'reviews/product_detail_topic.html', {'reviews': reviews, 'products': products, 'average': average, 'rating': rating, 'topics_list': topics_list, 'topics_number': topics_number, 'topics_safe': topics_safe, 'page': page, 'topic_safe': topic_safe, 'topics': topics})
 
 
 def review_new(request, product):
