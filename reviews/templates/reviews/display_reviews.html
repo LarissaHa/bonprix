@@ -1,0 +1,19 @@
+{{ comparison }}
+{% if reviews %}
+    {% for review in reviews|slice:":5" %}
+        <div>
+            <p>Von <b>{% ifequal review.author "Unkown" %}bonprix Kunde/Kundin {% else %}{{ review.author }}{% endifequal %}</b></p>
+            <p>Datum: {{ review.date }}</p>
+            <p>Sterne: {% ifequal review.stars "1" %}<i class="fas fa-star"></i>{% endifequal %}
+                {% ifequal review.stars "2" %}<i class="fas fa-star"></i><i class="fas fa-star"></i>{% endifequal %}
+                {% ifequal review.stars "3" %}<i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>{% endifequal %}
+                {% ifequal review.stars "4" %}<i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>{% endifequal %}
+                {% ifequal review.stars "5" %}<i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>{% endifequal %}
+            </p>
+            <p>{{ review.text|linebreaksbr }}</p>
+        </div>
+        <hr>
+    {% endfor %}
+{% else %}
+    keine Bewertungen bisher
+{% endif %}

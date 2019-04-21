@@ -1,0 +1,37 @@
+{% extends "reviews/index.html" %}
+{% load static %}
+
+{% block title %}Bewertungsübersicht {{ products.0.name }}{% endblock %}
+{% block main_heading %}Bewertungsübersicht {{ products.0.name }} ({{ products.0.number }}){% endblock %}
+
+{% block content %}
+<table cellpadding="10">
+    <colgroup>
+        <col width="15%">
+        <col width="85%">
+    </colgroup>
+    <tr>
+        <td valign="top">
+            <img src="{% get_static_prefix %}images/{{ products.0.number }}.jpg" alt="" title="" width="100%" /><br /><br />
+            <a href="{% url 'review_new' product=products.0.number %}"><button type="submit" class="btn btn-primary p-3 px-xl-4 py-xl-3">bewerte das Produkt</button></a></td>
+        </td>
+        <td><h3>Durchschnittliche Bewertung</h3>
+            {% include "reviews/display_stars.html" %}
+            <br>
+            <h3>Häufig erwähnte Themen</h3>
+            {% include "reviews/display_topics.html" %}
+            <br>
+            <br>
+            <h3>Neueste Bewertungen</h3>
+            {% include "reviews/sorting.html" %}
+            <br>
+            <br>
+            {% include "reviews/display_reviews.html" %}
+            {% include "reviews/pagination.html" with page=reviews %}
+        </td>
+    </tr>
+</table>
+
+
+
+{% endblock %}

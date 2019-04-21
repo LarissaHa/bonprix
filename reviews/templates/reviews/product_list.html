@@ -13,9 +13,9 @@
             
                     <div class="col-md-4">
                         <div class="blog-entry ftco-animate">
-                            <a href="{% url 'product_detail' pk=product.number %}" class="img img-2" style="background-image: url({% get_static_prefix %}images/{{ product.number }}.jpg);"></a>
+                            <a href="{% url 'product_detail_sort' pk=product.number sort='default' %}" class="img img-2" style="background-image: url({% get_static_prefix %}images/{{ product.number }}.jpg);"></a>
                             <div class="text text-2 pt-2 mt-3">
-                                <h3 class="mb-4"><a href="{% url 'product_detail' pk=product.number %}">{{ product.name }}</a></h3>
+                                <h3 class="mb-4"><a href="{% url 'product_detail_sort' pk=product.number sort='default' %}">{{ product.name }}</a></h3>
                             </div>
                         </div>
                     </div>
@@ -23,12 +23,5 @@
         </div>
     </div>
 </section>
-<!--
-{% for product in products %}
-    <div>
-            <img src="{% get_static_prefix %}images/{{ product.number }}.jpg" />
-        <h4><a href="{% url 'product_detail' pk=product.number %}">{{ product.name }}</a></h4>
-    </div>
-{% endfor %}
--->
+
 {% endblock %}

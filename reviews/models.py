@@ -5,6 +5,17 @@ from django.conf import settings
 from django.db import models 
 from django.utils import timezone
 from django.core.validators import MaxValueValidator, MinValueValidator
+# from dbview import DbView
+
+# class FrequentTopics(DbView):
+#     product_id = models.OneToOneField(Product, primary_key=True)
+#     topic_count = models.IntegerField()
+
+#     @classmethod
+#     def view(klass):
+#         qs = (Topic.objects.filter(cust_email__isnull=False).
+#                                .values('cust_id', 'cust_name', 'cust_email'))
+#         return str(qs.query)
 
 class Review(models.Model):
     STARS = (("1", "X"), ("2", "XX"), ("3", "XXX"), ("4", "XXXX"), ("5", "XXXXX"))

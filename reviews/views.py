@@ -2,7 +2,9 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Review, Product, Topic
 from django.utils import timezone
 from .forms import ReviewForm, ReviewFormUnknown
-import pandas as pd
+# import pandas as pd
+from django.db.models import Count
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
 def review_list(request):
@@ -16,38 +18,111 @@ def product_list(request):
     products = Product.objects.filter().order_by('number')
     return render(request, 'reviews/product_list.html', {'products': products})
 
+def paginator_spec(request, review_list):
+    # PAGINATOR
+    paginator = Paginator(review_list, 10)
+    page = request.GET.get('page')
+    try:
+        reviews = paginator.page(page)
+    except PageNotAnInteger:
+        reviews = paginator.page(1)
+    except EmptyPage:
+        reviews = paginator.page(paginator.num_pages)
+    return reviews, page
+
 def product_detail(request, pk):
     #reviews = get_object_or_404(Review, pk=pk)
-    reviews = Review.objects.filter(date__lte=timezone.now()).filter(product_number=pk).order_by('-date')
-    topics = list()
-    topics_complicated = Topic.objects.filter(product=pk)
-    for g in range(len(topics_complicated)):
-        topics.append(topics_complicated[g].topic)
-    #display_topics = Topic.objects.filter(product=pk).distinct('topic')
-    comparison = pd.DataFrame(columns=['freq'], index=set(topics))
-    comparison = comparison.fillna(0)
-    for g in topics:
-        comparison["freq"][g] += 1
-    comparison = comparison.sort_values("freq", ascending=False).head(10)
-    topics_list = comparison.index.tolist()
-    topics_number = comparison.freq.tolist()
 
+    # CALL REVIEWS
+    review_list = Review.objects.filter(date__lte=timezone.now()).filter(product_number=pk)
+
+    # REVIEW FILTER
+    # if request.GET.get('stars') == 'stars':
+    #     review_list = review_list.order_by('stars')
+
+    # if request.method == "GET":
+    #     if request.GET.get('stars'):
+    #         review_list = review_list.order_by(request.GET['stars'])
+    #     if request.GET.get('-stars'):
+    #         review_list = review_list.order_by('-stars')
+    # filter_names = ('-date', 'stars', '-stars')
+
+    # filter_clauses = [Q(filter=request.GET[filter])
+    #                   for filter in filter_names
+    #                   if request.GET.get(filter)]
+    # if filter_clauses:
+    #     review_list = review_list.order_by(reduce(operator.and_, filter_clauses))
+
+    # TOPICS GENERATOR
+    topics_complicated = Topic.objects.filter(product=pk)
+    topics = topics_complicated.values('topic').annotate(freq_topic=Count('topic')).order_by('-freq_topic')[:10]
+    topics_list = list()
+    topics_number = list()
+    for item in list(topics):
+        topics_list.append(item["topic"])
+        topics_number.append(item["freq_topic"])
+
+    # STARS AND RATING GENERATOR
     average = 0
     rating = {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0}
-    if len(reviews) > 0:
-        for review in reviews:
+    if len(review_list) > 0:
+        for review in review_list:
             average = average + int(review.stars)
-        average = average / len(reviews)
+        average = average / len(review_list)
         average = round(average, 1)
-        for review in reviews:
+        for review in review_list:
             for i in range(1,6):
                 if int(review.stars) == i:
                     rating[str(i)] = rating[str(i)] + 1
         for stars in rating:
-            rating[stars] = ( rating[stars] / len(reviews) ) * 100
+            rating[stars] = ( rating[stars] / len(review_list) ) * 100
             rating[stars] = round(rating[stars], 1)
+
+    # CALL PRODUCT
     products = Product.objects.filter(pk=pk).order_by('number')
-    return render(request, 'reviews/product_detail.html', {'reviews': reviews, 'products': products, 'average': average, 'rating': rating, 'topics_list': topics_list, 'topics_number': topics_number})
+    return review_list, products, average, rating, topics_list, topics_number
+
+def product_detail_star(request, pk, star):
+    review_list, products, average, rating, topics_list, topics_number = product_detail(request, pk)
+    review_list = review_list.filter(stars=star).order_by('-date')
+    # paginator = Paginator(review_list, 10)
+    # page = request.GET.get('page')
+    # try:
+    #     reviews = paginator.page(page)
+    # except PageNotAnInteger:
+    #     reviews = paginator.page(1)
+    # except EmptyPage:
+    #     reviews = paginator.page(paginator.num_pages)
+    reviews, page = paginator_spec(request, review_list)
+    return render(request, 'reviews/product_detail_star.html', {'reviews': reviews, 'products': products, 'average': average, 'rating': rating, 'topics_list': topics_list, 'topics_number': topics_number, 'page': page})
+
+
+def product_detail_topic(request, pk, topic):
+    review_list, products, average, rating, topics_list, topics_number = product_detail(request, pk)
+    # review_list = review_list.filter(stars=star)
+    reviews, page = paginator_spec(request, review_list)
+    return render(request, 'reviews/product_detail_topic.html', {'reviews': reviews, 'products': products, 'average': average, 'rating': rating, 'topics_list': topics_list, 'topics_number': topics_number, 'page': page})
+
+
+def product_detail_sort(request, pk, sort):
+    review_list, products, average, rating, topics_list, topics_number = product_detail(request, pk)
+    if sort == "pos":
+        review_list = review_list.order_by('-star')
+    elif sort == "neg":
+        review_list = review_list.order_by('star')
+    else:
+        review_list = review_list.order_by('-date')
+    # paginator = Paginator(review_list, 10)
+    # page = request.GET.get('page')
+    # try:
+    #     reviews = paginator.page(page)
+    # except PageNotAnInteger:
+    #     reviews = paginator.page(1)
+    # except EmptyPage:
+    #     reviews = paginator.page(paginator.num_pages)
+    reviews, page = paginator_spec(request, review_list)
+    return render(request, 'reviews/product_detail_sort.html', {'reviews': reviews, 'products': products, 'average': average, 'rating': rating, 'topics_list': topics_list, 'topics_number': topics_number, 'page': page})
+
 
 def review_new(request, product):
     products = Product.objects.filter(pk=product).order_by('number')
