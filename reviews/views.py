@@ -4,6 +4,8 @@ from django.utils import timezone
 from .forms import ReviewForm, ReviewFormUnknown
 from django.db.models import Count
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+# import reviews.nlp as nlp
+# from reviews.nlp import ClassifierBasedGermanTagger
 
 def review_list(request):
     reviews = Review.objects.filter(date__lte=timezone.now()).order_by('-date')
@@ -104,7 +106,7 @@ def product_detail_topic(request, pk, topic_safe):
     review_list, products, average, rating, topics_list, topics_number, topics_safe, topics = product_detail(request, pk)
     topic_with_product = Topic.objects.filter(product=pk, topic_safe=topic_safe).values('review').order_by('review')
     id_list = [ids['review'] for ids in topic_with_product]
-    reviews_with_topic = Review.objects.filter(product_number=pk, pk__in=id_list)
+    reviews_with_topic = Review.objects.filter(product_number=pk, pk__in=id_list).order_by('-date')
     reviews, page = paginator_spec(request, reviews_with_topic)
     topic_average, topic_rating = star_generator(reviews)
     return render(request, 'reviews/product_detail_topic.html', {'reviews': reviews, 'products': products, 'average': average, 'rating': rating, 'topics_list': topics_list, 'topics_number': topics_number, 'topics_safe': topics_safe, 'page': page, 'topic_safe': topic_safe, 'topics': topics, 'topic_average': topic_average})
@@ -120,10 +122,12 @@ def review_new(request, product):
             review.date = timezone.now()
             review.product_number = Product.objects.filter(pk=product)[0]
             review.save()
+            # data = form.cleaned_data
+            # topic = nlp.comment_to_topic(data['text'])
             # for t in range(len(topic[0])):
-            #     top = Topic(review=review.pk, product=Product.objects.filter(pk=product)[0], topic=topic[0][t], topic_safe=[1][t])
+            #     top = Topic(review=review, product=review.product_number, topic=topic[0][t], topic_safe=topic[1][t])
             #     top.save()
-            return redirect('product_detail', pk=product)
+            return redirect('product_detail_sort', pk=product, sort='default')
     else:
         form = ReviewForm()
     return render(request, 'reviews/review_edit.html', {'form': form, 'products': products})
@@ -138,11 +142,12 @@ def review_new_unknown(request):
             review.author = "Unknown"
             review.date = timezone.now()
             review.save()
+            # data = form.cleaned_data
+            # topic = nlp.comment_to_topic(data['text'])
             # for t in range(len(topic[0])):
-            #     top = Topic(review=review.pk, product=Product.objects.filter(pk=product)[0], topic=topic[0][t], topic_safe=[1][t])
+            #     top = Topic(review=review, product=review.product_number, topic=topic[0][t], topic_safe=topic[1][t])
             #     top.save()
-            return redirect('product_detail', pk=review.product_number.number)
+            return redirect('product_detail_sort', pk=review.product_number.number, sort='default')
     else:
         form = ReviewFormUnknown()
     return render(request, 'reviews/review_new_unknown.html', {'form': form})
-    
