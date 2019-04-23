@@ -15,10 +15,14 @@
             <img src="{% get_static_prefix %}images/{{ products.0.number }}.jpg" alt="" title="" width="100%" /><br /><br />
             <a href="{% url 'review_new' product=products.0.number %}"><button type="submit" class="btn btn-primary p-3 px-xl-4 py-xl-3">bewerte das Produkt</button></a></td>
         </td>
-        <td><h3>Durchschnittliche Bewertung</h3>
+        <td valign="top"><h3>Durchschnittliche Bewertung</h3>
             {% include "reviews/display_stars.html" with pk=pk %}
-            <br>
-            <h3>Häufig erwähnte Themen</h3>
+        </td>
+    </tr>
+</table>
+<hr>
+<table cellpadding="10"><tr><td>
+<h3>Häufig erwähnte Themen</h3>
             {% include "reviews/display_topics.html" with pk=pk %}
             <br>
             <br>
@@ -28,10 +32,6 @@
             <br>
             {% include "reviews/display_reviews.html" %}
             {% include "reviews/pagination.html" with page=reviews %}
-        </td>
-    </tr>
-</table>
-
-
+</td></tr></table>
 
 {% endblock %}

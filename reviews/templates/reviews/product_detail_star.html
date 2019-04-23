@@ -15,19 +15,18 @@
             <img src="{% get_static_prefix %}images/{{ products.0.number }}.jpg" alt="" title="" width="100%" /><br /><br />
             <a href="{% url 'review_new' product=products.0.number %}"><button type="submit" class="btn btn-primary p-3 px-xl-4 py-xl-3">bewerte das Produkt</button></a></td>
         </td>
-        <td><h3>Durchschnittliche Bewertung</h3>
+        <td valign="top"><h3>Durchschnittliche Bewertung</h3>
             {% include "reviews/display_stars.html" %}
             <br>
-            <a href="{% url 'product_detail_sort' pk=products.0.number sort='default'%}"><button type="submit" class="btn btn-primary p-3 px-xl-4 py-xl-3">Filterung aufheben</button></a>
-            <br>
-            <br>
-            <h3>{{ star }}-Sterne-Bewertungen</h3>
-            {% include "reviews/display_reviews.html" %}
-            {% include "reviews/pagination.html" with page=reviews %}
+            <a href="{% url 'product_detail_sort' pk=products.0.number sort='default'%}"><button type="submit" class="btn btn-light p-3 px-xl-4 py-xl-3">Filterung nach Sternen aufheben</button></a>
         </td>
     </tr>
 </table>
-
-
+<hr>
+<table cellpadding="10"><tr><td>
+            <h3>{{ star }}-Sterne-Bewertungen</h3>
+            {% include "reviews/display_reviews.html" %}
+            {% include "reviews/pagination.html" with page=reviews %}
+        </td></tr></table>
 
 {% endblock %}

@@ -2,14 +2,13 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Review, Product, Topic
 from django.utils import timezone
 from .forms import ReviewForm, ReviewFormUnknown
-# import pandas as pd
 from django.db.models import Count
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-# Create your views here.
 def review_list(request):
     reviews = Review.objects.filter(date__lte=timezone.now()).order_by('-date')
-    return render(request, 'reviews/review_list.html', {'reviews': reviews[:5]})
+    reviews, page = paginator_spec(request, reviews)
+    return render(request, 'reviews/review_list.html', {'reviews': reviews, 'page': page})
 
 def index(request):
     return render(request, 'reviews/home.html', {})
@@ -30,40 +29,7 @@ def paginator_spec(request, review_list):
         reviews = paginator.page(paginator.num_pages)
     return reviews, page
 
-def product_detail(request, pk):
-    #reviews = get_object_or_404(Review, pk=pk)
-
-    # CALL REVIEWS
-    review_list = Review.objects.filter(date__lte=timezone.now()).filter(product_number=pk)
-
-    # REVIEW FILTER
-    # if request.GET.get('stars') == 'stars':
-    #     review_list = review_list.order_by('stars')
-
-    # if request.method == "GET":
-    #     if request.GET.get('stars'):
-    #         review_list = review_list.order_by(request.GET['stars'])
-    #     if request.GET.get('-stars'):
-    #         review_list = review_list.order_by('-stars')
-    # filter_names = ('-date', 'stars', '-stars')
-
-    # filter_clauses = [Q(filter=request.GET[filter])
-    #                   for filter in filter_names
-    #                   if request.GET.get(filter)]
-    # if filter_clauses:
-    #     review_list = review_list.order_by(reduce(operator.and_, filter_clauses))
-
-    # TOPICS GENERATOR
-    topics_complicated = Topic.objects.filter(product=pk)
-    topics = topics_complicated.values('topic', 'topic_safe').annotate(freq_topic=Count('topic')).order_by('-freq_topic')[:10]
-    topics_list = list()
-    topics_number = list()
-    topics_safe = list()
-    for item in list(topics):
-        topics_list.append(item["topic"])
-        topics_number.append(item["freq_topic"])
-        topics_safe.append(item["topic_safe"])
-
+def star_generator(review_list):
     # STARS AND RATING GENERATOR
     average = 0
     rating = {'1': 0, '2': 0, '3': 0, '4': 0, '5': 0}
@@ -79,11 +45,30 @@ def product_detail(request, pk):
         for stars in rating:
             rating[stars] = ( rating[stars] / len(review_list) ) * 100
             rating[stars] = round(rating[stars], 1)
+    return average, rating
+
+def product_detail(request, pk):
+    products = get_object_or_404(Product, pk=pk)
+
+    # CALL REVIEWS
+    review_list = Review.objects.filter(date__lte=timezone.now()).filter(product_number=pk)
+
+    # TOPICS GENERATOR
+    topics_complicated = Topic.objects.filter(product=pk)
+    topics = topics_complicated.values('topic', 'topic_safe').annotate(freq_topic=Count('topic')).order_by('-freq_topic')[:10]
+    topics_list = list()
+    topics_number = list()
+    topics_safe = list()
+    for item in list(topics):
+        topics_list.append(item["topic"])
+        topics_number.append(item["freq_topic"])
+        topics_safe.append(item["topic_safe"])
+
+    average, rating = star_generator(review_list)
 
     # CALL PRODUCT
     products = Product.objects.filter(pk=pk).order_by('number')
     return review_list, products, average, rating, topics_list, topics_number, topics_safe, topics
-
 
 def product_detail_star(request, pk, star):
     review_list, products, average, rating, topics_list, topics_number, topics_safe, topics = product_detail(request, pk)
@@ -121,7 +106,8 @@ def product_detail_topic(request, pk, topic_safe):
     id_list = [ids['review'] for ids in topic_with_product]
     reviews_with_topic = Review.objects.filter(product_number=pk, pk__in=id_list)
     reviews, page = paginator_spec(request, reviews_with_topic)
-    return render(request, 'reviews/product_detail_topic.html', {'reviews': reviews, 'products': products, 'average': average, 'rating': rating, 'topics_list': topics_list, 'topics_number': topics_number, 'topics_safe': topics_safe, 'page': page, 'topic_safe': topic_safe, 'topics': topics})
+    topic_average, topic_rating = star_generator(reviews)
+    return render(request, 'reviews/product_detail_topic.html', {'reviews': reviews, 'products': products, 'average': average, 'rating': rating, 'topics_list': topics_list, 'topics_number': topics_number, 'topics_safe': topics_safe, 'page': page, 'topic_safe': topic_safe, 'topics': topics, 'topic_average': topic_average})
 
 
 def review_new(request, product):
@@ -134,6 +120,9 @@ def review_new(request, product):
             review.date = timezone.now()
             review.product_number = Product.objects.filter(pk=product)[0]
             review.save()
+            # for t in range(len(topic[0])):
+            #     top = Topic(review=review.pk, product=Product.objects.filter(pk=product)[0], topic=topic[0][t], topic_safe=[1][t])
+            #     top.save()
             return redirect('product_detail', pk=product)
     else:
         form = ReviewForm()
@@ -148,8 +137,10 @@ def review_new_unknown(request):
             review = form.save(commit=False)
             review.author = "Unknown"
             review.date = timezone.now()
-            #review.product_number = Product.objects.filter(pk=product)[0]
             review.save()
+            # for t in range(len(topic[0])):
+            #     top = Topic(review=review.pk, product=Product.objects.filter(pk=product)[0], topic=topic[0][t], topic_safe=[1][t])
+            #     top.save()
             return redirect('product_detail', pk=review.product_number.number)
     else:
         form = ReviewFormUnknown()
