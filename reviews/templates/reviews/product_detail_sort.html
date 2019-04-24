@@ -7,16 +7,19 @@
 {% block content %}
 <table cellpadding="10">
     <colgroup>
-        <col width="15%">
-        <col width="85%">
+        <col width="25%">
+        <col width="75%">
     </colgroup>
     <tr>
         <td valign="top">
             <img src="{% get_static_prefix %}images/{{ products.0.number }}.jpg" alt="" title="" width="100%" /><br /><br />
-            <a href="{% url 'review_new' product=products.0.number %}"><button type="submit" class="btn btn-primary p-3 px-xl-4 py-xl-3">bewerte das Produkt</button></a></td>
+            </td>
         </td>
-        <td valign="top"><h3>Durchschnittliche Bewertung</h3>
+        <td valign="top">
+            <h3>Durchschnittliche Bewertung</h3>
             {% include "reviews/display_stars.html" with pk=pk %}
+            <br>
+            <a href="{% url 'review_new' product=products.0.number %}"><button type="submit" class="btn btn-outline-danger p-3 px-xl-3 py-xl-1">bewerte das Produkt</button></a>
         </td>
     </tr>
 </table>

@@ -1,21 +1,21 @@
 <a href="{% url 'product_detail_sort' pk=products.0.number sort='default'%}">
     {% if tag == "Neueste" %}
-    <button type="submit" class="btn btn-dark p-3 px-xl-3 py-xl-2" name="-date">neueste zuerst</button>
+    <button type="submit" class="btn btn-dark p-3 px-xl-3 py-xl-1" name="-date">neueste zuerst</button>
     {% else %}
-    <button type="submit" class="btn btn-light p-3 px-xl-3 py-xl-2" name="-date">neueste zuerst</button>
+    <button type="submit" class="btn btn-light p-3 px-xl-3 py-xl-1" name="-date">neueste zuerst</button>
     {% endif %}
 </a>
 <a href="{% url 'product_detail_sort' pk=products.0.number sort='pos'%}">
     {% if tag == "Positive" %}
-    <button type="submit" class="btn btn-dark p-3 px-xl-3 py-xl-2" name="-stars">positivste zuerst</button>
+    <button type="submit" class="btn btn-dark p-3 px-xl-3 py-xl-1" name="-stars">positivste zuerst</button>
     {% else %}
-    <button type="submit" class="btn btn-light p-3 px-xl-3 py-xl-2" name="-stars">positivste zuerst</button>
+    <button type="submit" class="btn btn-light p-3 px-xl-3 py-xl-1" name="-stars">positivste zuerst</button>
     {% endif %}
 </a>
 <a href="{% url 'product_detail_sort' pk=products.0.number sort='neg'%}">
     {% if tag == "Negative" %}
-    <button type="submit" class="btn btn-dark p-3 px-xl-3 py-xl-2" name="stars">negativste zuerst</button>
+    <button type="submit" class="btn btn-dark p-3 px-xl-3 py-xl-1" name="stars">negativste zuerst</button>
     {% else %}
-    <button type="submit" class="btn btn-light p-3 px-xl-3 py-xl-2" name="stars">negativste zuerst</button>
+    <button type="submit" class="btn btn-light p-3 px-xl-3 py-xl-1" name="stars">negativste zuerst</button>
     {% endif %}
 </a>
